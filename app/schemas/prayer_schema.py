@@ -1,12 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 class PrayerDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     title: str
     content: str
     category_id: int
 
 class PrayerSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
     content: str
@@ -15,6 +17,7 @@ class PrayerSchema(BaseModel):
     created_at: datetime
 
 class CategorySchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     name: str
     created_at: datetime

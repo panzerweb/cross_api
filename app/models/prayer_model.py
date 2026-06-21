@@ -1,6 +1,7 @@
 from sqlalchemy import Integer, String, Text, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.config import Base
+from sqlalchemy.sql import func
 from datetime import datetime
 
 class Prayer(Base):
@@ -9,8 +10,10 @@ class Prayer(Base):
         Integer, primary_key=True, unique=True, autoincrement=True
     )
 
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), 
+        server_default=func.now() # Add this default
+    )
     title: Mapped[str] = mapped_column(String, nullable=True)
 
     content: Mapped[str] = mapped_column(Text, nullable=True)
@@ -35,6 +38,9 @@ class Category(Base):
 
     name: Mapped[str] = mapped_column(String, nullable=True)
 
-    created_at:Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), 
+        server_default=func.now() # Add this default
+    )
 
     prayer = relationship("Prayer", back_populates="category")
