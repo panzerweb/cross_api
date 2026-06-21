@@ -3,18 +3,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.prayer_model import Prayer
 from app.schemas.prayer_schema import PrayerDTO, PrayerSchema
 
-async def create_prayer(db: AsyncSession, prayer: PrayerDTO):
-    db_prayer = Prayer(title=prayer.title, content=prayer.content, category_id = prayer.category_id)
-    db.add(db_prayer)
+class PrayerService:
+    @staticmethod
+    async def create_prayer(db: AsyncSession, prayer: PrayerDTO) -> Prayer:
+        db_prayer = Prayer(title=prayer.title, content=prayer.content, category_id = prayer.category_id)
+        db.add(db_prayer)
 
-    await db.commit()
-    await db.refresh(db_prayer)
+        await db.commit()
+        await db.refresh(db_prayer)
 
-    return db_prayer
+        return db_prayer
 
-async def get_prayers(db: AsyncSession):
-    query_statement = select(Prayer)
+    @staticmethod
+    async def get_prayers(db: AsyncSession) -> list[Prayer]:
 
-    result = await db.scalars(query_statement)
+        result = await db.execute(select(Prayer))
 
-    return result.all()
+        prayers = result.scalars().all()
+
+        return prayers

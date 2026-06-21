@@ -7,10 +7,6 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# If the URL starts with standard postgresql://, inject +asyncpg for SQLAlchemy's async engine
-if DATABASE_URL and DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
-
 # Quick sanity check to make sure it looks right (it should now show postgresql+asyncpg://...)
 print(f"Connecting to: {DATABASE_URL}")
 
@@ -20,6 +16,10 @@ engine = create_async_engine(
     pool_pre_ping=True, 
     pool_size=10, 
     max_overflow=20,
+    connect_args={
+        "statement_cache_size": 0,
+        "max_cached_statement_lifetime": 0
+    }
 )
 
 AsyncSessionLocal = async_sessionmaker(
