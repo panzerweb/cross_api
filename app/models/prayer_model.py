@@ -3,6 +3,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.config import Base
 from sqlalchemy.sql import func
 from datetime import datetime
+from typing import List, Optional
+
 
 class Prayer(Base):
     __tablename__ = "prayer"
@@ -27,7 +29,7 @@ class Prayer(Base):
         Boolean, default=False
     )
 
-    category = relationship("Category", back_populates="prayer")
+    category: Mapped['Category'] = relationship("Category", back_populates="prayers")
 
 class Category(Base):
     __tablename__ = "category"
@@ -43,4 +45,4 @@ class Category(Base):
         server_default=func.now() # Add this default
     )
 
-    prayer = relationship("Prayer", back_populates="category")
+    prayers: Mapped[List['Prayer']] = relationship("Prayer", back_populates="category")

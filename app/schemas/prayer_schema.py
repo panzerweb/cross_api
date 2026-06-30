@@ -7,6 +7,12 @@ class PrayerDTO(BaseModel):
     content: str
     category_id: int
 
+class PrayerUpdateDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    title: str
+    content: str
+    category_id: int
+
 class PrayerSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
